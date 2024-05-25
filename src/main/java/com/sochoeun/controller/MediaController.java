@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/contents")
+@RequestMapping("/api/contents")
 @Tag(name = "Medias")
 public class MediaController {
     private final ContentService contentService;

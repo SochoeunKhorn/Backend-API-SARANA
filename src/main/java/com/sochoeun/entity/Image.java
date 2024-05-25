@@ -1,12 +1,13 @@
 package com.sochoeun.entity;
 
+import com.sochoeun.security.auditing.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Table(name = "images")
 @Data
-public class Image extends AuditEntity {
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

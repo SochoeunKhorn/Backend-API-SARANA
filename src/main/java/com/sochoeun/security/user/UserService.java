@@ -2,10 +2,12 @@ package com.sochoeun.security.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,4 +34,20 @@ public class UserService {
         // save the new password
         repository.save(user);
     }
+
+    public User getUser(Integer userId){
+        return repository.findById(userId).orElseThrow(
+                ()->new UsernameNotFoundException("User with ID: %s not found".formatted(userId)));
+    }
+
+    public List<User> getAllUser(){
+        return  repository.findAll();
+    }
+
+    public User disableUser(Integer userId,String status){
+        User user = getUser(userId);
+        user.setStatus(status);
+        return repository.save(user);
+    }
+
 }

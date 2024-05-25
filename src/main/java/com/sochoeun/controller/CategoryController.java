@@ -1,6 +1,7 @@
 package com.sochoeun.controller;
 
 import com.sochoeun.entity.Category;
+import com.sochoeun.exception.response.BaseResponse;
 import com.sochoeun.service.CategoryService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,36 +13,46 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("categories")
+@RequestMapping("/api/categories")
 @Tag(name = "Categories")
 // Name on OpenApi UI
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private BaseResponse baseResponse;
     @GetMapping()
     public ResponseEntity<?> getCategories(){
         List<Category> allCategory = categoryService.getAllCategory();
-        return ResponseEntity.ok(allCategory);
+        baseResponse.createSuccess(allCategory);
+        return ResponseEntity.ok(baseResponse);
     }
     @Hidden
     @GetMapping("/{id}")
     public ResponseEntity<?> getCategory(@PathVariable("id") Integer id){
         Category category = categoryService.getCategory(id);
-        return ResponseEntity.ok(category);
+        baseResponse = new BaseResponse();
+        baseResponse.getSuccess(category);
+        return ResponseEntity.ok(baseResponse);
     }
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Category category){
-        categoryService.create(category);
-        return ResponseEntity.ok(category);
+    public ResponseEntity<?> createCategory(@RequestBody Category category){
+        Category newCategory = categoryService.create(category);
+        baseResponse = new BaseResponse();
+        baseResponse.createSuccess(newCategory);
+        return ResponseEntity.ok(baseResponse);
     }
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody Category category){
-        categoryService.create(category);
-        return ResponseEntity.ok(category);
+    public ResponseEntity<?> updateCategory(@RequestBody Category category){
+        Category updated = categoryService.create(category);
+        baseResponse = new BaseResponse();
+        baseResponse.updatedSuccess(updated);
+        return ResponseEntity.ok(baseResponse);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteCategory(@PathVariable("id") Integer id){
         categoryService.delete(id);
-        return ResponseEntity.ok("Delete Successfully");
+        baseResponse = new BaseResponse();
+        baseResponse.deletedSuccess();
+        return ResponseEntity.ok(baseResponse);
     }
 }

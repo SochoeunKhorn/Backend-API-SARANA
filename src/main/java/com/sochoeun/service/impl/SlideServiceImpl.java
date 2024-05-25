@@ -15,23 +15,23 @@ public class SlideServiceImpl implements SlideService {
 
     private final SlideRepository slideRepository;
     @Override
-    public void create(Slide slide) {
-        slideRepository.save(slide);
+    public Slide create(Slide slide) {
+        return slideRepository.save(slide);
     }
 
     @Override
-    public Slide getSlide(Integer id) {
+    public Slide getSlideById(Integer id) {
         return slideRepository.findById(id).orElseThrow(()->new NotFoundException("Slide",id));
     }
 
     @Override
-    public List<Slide> getSlides() {
+    public List<Slide> getAllSlides() {
         return slideRepository.findAll();
     }
 
     @Override
-    public void update(Integer id,Slide slide) {
-        Slide update = getSlide(id);
+    public void updateSlide(Integer id, Slide slide) {
+        Slide update = getSlideById(id);
         update.setName(slide.getName());
         update.setDescription(slide.getDescription());
         update.setImageUrl(slide.getImageUrl());
@@ -39,8 +39,8 @@ public class SlideServiceImpl implements SlideService {
     }
 
     @Override
-    public void delete(Integer id) {
-        if(getSlide(id) != null){
+    public void deleteSlide(Integer id) {
+        if(getSlideById(id) != null){
             slideRepository.deleteById(id);
         }
     }

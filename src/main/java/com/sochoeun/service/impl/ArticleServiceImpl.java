@@ -20,15 +20,16 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final CategoryService categoryService;
     @Override
-    public void create(Article article) {
-        Integer id = article.getId();
-        if(id != null){
-            getArticle(id);
-        }
+    public Article createOrUpdate(Article article) {
         Category category = categoryService.getCategory(article.getCategory().getId());
-        if(category != null){
-            articleRepository.save(article);
+        Integer id = article.getId();
+        if(id != 0){
+            Article update = new Article();
+            update.setCategory(category);
+            update.setName(article.getName());
+            return articleRepository.save(update);
         }
+        return articleRepository.save(article);
     }
 
     @Override

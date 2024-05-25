@@ -13,12 +13,12 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     @Override
-    public void create(Category category) {
+    public Category create(Category category) {
         Integer id = category.getId();
         if(id != null){
             getCategory(id);
         }
-        categoryRepository.save(category);
+        return categoryRepository.save(category);
     }
 
     @Override

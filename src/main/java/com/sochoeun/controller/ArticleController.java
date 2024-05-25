@@ -1,16 +1,17 @@
 package com.sochoeun.controller;
 
 import com.sochoeun.entity.Article;
+import com.sochoeun.exception.response.BaseResponse;
 import com.sochoeun.pagination.PageResponse;
 import com.sochoeun.service.ArticleService;
 import io.swagger.v3.oas.annotations.Hidden;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,38 +19,52 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Articles")
 public class ArticleController {
     private final ArticleService articleService;
-
+    private BaseResponse baseResponse;
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Article article){
-        articleService.create(article);
+    public ResponseEntity<?> createArticle(@RequestBody Article article){
+        Article create = articleService.createOrUpdate(article);
+        baseResponse = new BaseResponse();
+        baseResponse.createSuccess(create);
         return ResponseEntity.ok(article);
     }
     @GetMapping
-    public ResponseEntity<?> getArticles(){
-        return ResponseEntity.ok(articleService.getArticles());
+    public ResponseEntity<?> getAllArticles(){
+        List<Article> articles = articleService.getArticles();
+        baseResponse = new BaseResponse();
+        baseResponse.getSuccess(articles);
+        return ResponseEntity.ok(baseResponse);
     }
+    
     @Hidden
     @GetMapping("/category/{category_id}")
-    public ResponseEntity<?> getArticlesByCategory(@PathVariable("category_id") Integer category_id,
-                                                   @RequestParam(value = "pageNo",required = false,defaultValue = "0") Integer pageNo,
-                                                   @RequestParam(value = "pageSize",required = false,defaultValue = "5") Integer pageSize){
+    public ResponseEntity<?> getArticlesByCategoryId(@PathVariable("category_id") Integer category_id,
+                                                     @RequestParam(value = "pageNo",required = false,defaultValue = "0") Integer pageNo,
+                                                     @RequestParam(value = "pageSize",required = false,defaultValue = "5") Integer pageSize){
         Page<Article>page=articleService.getArticlesByCategoryId(category_id,pageNo,pageSize);
         PageResponse pageResponse = new PageResponse(page);
-        return ResponseEntity.ok(pageResponse);
+        baseResponse = new BaseResponse();
+        baseResponse.getSuccess(pageResponse);
+        return ResponseEntity.ok(baseResponse);
     }
     @Hidden
     @GetMapping("/{id}")
-    public ResponseEntity<?> getArticle(@PathVariable("id") Integer id){
-        return ResponseEntity.ok(articleService.getArticle(id));
+    public ResponseEntity<?> getArticleById(@PathVariable("id") Integer id){
+        Article article = articleService.getArticle(id);
+        baseResponse = new BaseResponse();
+        return ResponseEntity.ok(baseResponse);
     }
     @PutMapping()
-    public ResponseEntity<?> update(@RequestBody Article article){
-        articleService.create(article);
-        return ResponseEntity.ok(article);
+    public ResponseEntity<?> updateArticle(@RequestBody Article article){
+        Article updated = articleService.createOrUpdate(article);
+        baseResponse = new BaseResponse();
+        baseResponse.updatedSuccess(updated);
+        return ResponseEntity.ok(baseResponse);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteArticle(@PathVariable("id") Integer id){
         articleService.delete(id);
-        return ResponseEntity.ok("Delete Successfully");
+        baseResponse = new BaseResponse();
+        baseResponse.deletedSuccess();
+        return ResponseEntity.ok(baseResponse);
     }
 }

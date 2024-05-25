@@ -13,8 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -47,12 +46,14 @@ public class SecurityConfiguration {
                                 .requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
                                 .requestMatchers(GET,"/api/v1/demo-controller").permitAll()
+                               // .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
                                 .requestMatchers("/api/v1/management/**").hasRole("MANAGEMENT")
-                                .requestMatchers(GET,"/articles/**").permitAll()
-                                .requestMatchers(GET,"/categories/**").permitAll()
-                                .requestMatchers(GET,"/contents/**").permitAll()
-                                .requestMatchers(GET,"/medias/**").permitAll()
-                                .requestMatchers(GET,"/slides/**").permitAll()
+                                .requestMatchers(GET,"/api/articles/**").permitAll()
+                                .requestMatchers(GET,"/api/categories/**").permitAll()
+                                .requestMatchers(GET,"/api/contents/**").permitAll()
+                                .requestMatchers(GET,"/api/medias/**").permitAll()
+                                .requestMatchers(GET,"/api/slides/**").permitAll()
+                                .requestMatchers("/api/v1/users/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )

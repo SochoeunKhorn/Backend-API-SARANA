@@ -30,6 +30,8 @@ public class User implements UserDetails {
   private String lastname;
   private String email;
   private String password;
+  @Column(length = 10)
+  private String status;
 
   //@Enumerated(EnumType.STRING)
   @ManyToMany(fetch = FetchType.EAGER)
