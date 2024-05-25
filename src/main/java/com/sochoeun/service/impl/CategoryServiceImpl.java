@@ -14,10 +14,6 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     @Override
     public Category create(Category category) {
-        Integer id = category.getId();
-        if(id != null){
-            getCategory(id);
-        }
         return categoryRepository.save(category);
     }
 
@@ -29,6 +25,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category getCategory(Integer id) {
         return categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category",id));
+    }
+
+    @Override
+    public Category updateCategory(Integer id, Category category) {
+        Category update = getCategory(id);
+        update.setNameEn(category.getNameEn());
+        update.setNameKh(category.getNameKh());
+        return categoryRepository.save(update);
     }
 
     @Override

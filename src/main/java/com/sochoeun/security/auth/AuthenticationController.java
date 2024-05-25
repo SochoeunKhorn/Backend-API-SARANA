@@ -20,7 +20,7 @@ public class AuthenticationController {
 
   private final AuthenticationService service;
 
-  @PreAuthorize("hasRole('ADMIN')")
+  //@PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/register")
   public ResponseEntity<AuthenticationResponse> register(
       @RequestBody RegisterRequest request

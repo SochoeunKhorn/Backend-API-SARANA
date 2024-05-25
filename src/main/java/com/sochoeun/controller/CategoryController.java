@@ -23,6 +23,7 @@ public class CategoryController {
     @GetMapping()
     public ResponseEntity<?> getCategories(){
         List<Category> allCategory = categoryService.getAllCategory();
+        baseResponse = new BaseResponse();
         baseResponse.createSuccess(allCategory);
         return ResponseEntity.ok(baseResponse);
     }
@@ -41,9 +42,11 @@ public class CategoryController {
         baseResponse.createSuccess(newCategory);
         return ResponseEntity.ok(baseResponse);
     }
-    @PutMapping
-    public ResponseEntity<?> updateCategory(@RequestBody Category category){
-        Category updated = categoryService.create(category);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCategory(
+            @PathVariable Integer id,
+            @RequestBody Category category){
+        Category updated = categoryService.updateCategory(id,category);
         baseResponse = new BaseResponse();
         baseResponse.updatedSuccess(updated);
         return ResponseEntity.ok(baseResponse);
